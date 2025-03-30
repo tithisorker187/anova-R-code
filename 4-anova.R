@@ -26,26 +26,8 @@ effects <- colMeans(data[-4]) * 2  # Multiply by 2 as per factorial effect formu
 # Display effects
 effects
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #*****************************(ii)********************************
-
-
-model1=aov(yields~treatment+block
+model1=aov(yields~treatment+block)
 
 
 
