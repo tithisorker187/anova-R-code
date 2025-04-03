@@ -40,7 +40,7 @@ model_e <- lm(Yield ~ A + B + C + AB + AC + BC + ABC, data=data)
 summary(model_e)
 
 #(ii)
-
+#test of significance
 anova_s=aov(Yield~A*B*C,data=data)
 anova_s
 summary(anova_s)
