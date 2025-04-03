@@ -5,29 +5,53 @@
 install.packages("dplyr")
 library(dplyr)
 
-# Load necessary library
-library(dplyr)
-
-# Given data (Factorial experiment with blocks)
+# Define the data as given in the image
 data <- data.frame(
-  A = rep(c(-1, 1), each=4),
-  B = rep(c(-1, -1, 1, 1), times=2),
-  C = rep(c(-1, 1), times=4),
-  Yield = c(986, 930, 930, 883, 901, 815, 857, 889)  # Total yield from the table
+  Block = rep(1:4, each=8),
+  Treatment = rep(c("(1)", "a", "b", "ab", "c", "ac", "bc", "abc"), times=4),
+  Yield = c(257, 232, 230, 211, 210, 176, 186, 175,
+            267, 276, 262, 220, 256, 269, 285, 272,
+            188, 186, 160, 188, 164, 214, 182, 166,
+            204, 206, 239, 224, 254, 269, 252, 301)
 )
+data
+# Encode factors
+data$A <- ifelse(grepl("a", data$Treatment), 1, -1)
+data$A
+data$B <- ifelse(grepl("b", data$Treatment), 1, -1)
+data$B
+data$C <- ifelse(grepl("c", data$Treatment), 1, -1)
+data$C
 
-# Compute main effects and interactions
-data <- data %>%
-  mutate(AB = A * B, AC = A * C, BC = B * C, ABC = A * B * C)
+# Compute interaction terms
+data$AB <- data$A * data$B
+data$AB
+data$AC <- data$A * data$C
+data$AC
+data$BC <- data$B * data$C
+data$BC
+data$ABC <- data$A * data$B * data$C
+data$ABC
 
-# Compute means for effects
-effects <- colMeans(data[-4]) * 2  # Multiply by 2 as per factorial effect formula
+# Perform linear regression to estimate effects
+model_e <- lm(Yield ~ A + B + C + AB + AC + BC + ABC, data=data)
 
 # Display effects
-effects
+summary(model_e)
 
-#*****************************(ii)********************************
-model1=aov(yields~treatment+block)
+#(ii)
+
+anova_s=aov(Yield~A*B*C,data=data)
+anova_s
+summary(anova_s)
+
+#III
+#ABC confounding
+anova_model=aov(Yield~Block+Treatment,data=data)
+anova_model
+
+
+
 
 
 
